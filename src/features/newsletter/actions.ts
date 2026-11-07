@@ -1,5 +1,8 @@
 "use server";
 
+import { isValidEmail, readField } from "@/lib/validation";
+import { requestNewsletterSubscription } from "./server";
+
 export type NewsletterState = {
   status: "idle" | "success" | "error";
   message: string;
@@ -7,21 +10,29 @@ export type NewsletterState = {
   email?: string;
 };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export async function subscribeToNewsletter(
   _prev: NewsletterState,
   formData: FormData,
 ): Promise<NewsletterState> {
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  // Champ piège invisible : rempli uniquement par les robots.
+  if (readField(formData, "company") !== "") {
+    return { status: "success", message: "Merci ! Vérifiez votre boîte mail pour confirmer votre inscription." };
+  }
 
-  if (!EMAIL_PATTERN.test(email) || email.length > 254) {
+  const email = readField(formData, "email").toLowerCase();
+  if (!isValidEmail(email)) {
     return { status: "error", message: "Merci d’indiquer une adresse e-mail valide.", email };
   }
 
-  // TODO(supabase): enregistrer l'adresse + date de consentement, puis envoyer l'e-mail de confirmation (double opt-in).
+  const result = await requestNewsletterSubscription(email);
+  if (result === "unavailable") {
+    return { status: "success", message: "Merci ! L’inscription à la newsletter sera active très prochainement." };
+  }
+  if (result === "failed") {
+    return { status: "error", message: "L’inscription n’a pas pu aboutir. Réessayez dans quelques instants.", email };
+  }
   return {
     status: "success",
-    message: "Merci ! L’inscription à la newsletter sera active très prochainement.",
+    message: "Merci ! Un e-mail de confirmation vient de vous être envoyé : cliquez sur le lien qu’il contient pour valider votre inscription.",
   };
 }

@@ -95,11 +95,18 @@ const sections: LegalSection[] = [
           Vos données sont destinées aux seuls membres de l’équipe WOP habilités à les traiter. Elles ne sont jamais
           vendues ni cédées à des fins commerciales.
         </p>
-        {/* TODO(dev) : ajouter ici les prestataires choisis pour les formulaires (ex. Supabase, Resend) dès leur mise en service. */}
         <p>
-          Elles peuvent être confiées à des prestataires techniques agissant pour notre compte (sous-traitants), tenus
-          à la confidentialité et à la sécurité des données : notamment l’hébergeur du site, {org.host.name}.
+          Elles sont confiées à des prestataires techniques agissant pour notre compte (sous-traitants), tenus à la
+          confidentialité et à la sécurité des données :
         </p>
+        <DefinitionTable
+          rows={[
+            [org.host.name, "Hébergement du site (États-Unis)."],
+            // ⚠️ Vrai uniquement si le projet Supabase est créé dans une région UE (voir README).
+            ["Supabase", "Base de données où sont enregistrés les messages et les inscriptions à la newsletter (Union européenne)."],
+            ["Resend", "Envoi des e-mails : notification de vos messages à l’équipe, confirmation d’inscription (États-Unis)."],
+          ]}
+        />
       </>
     ),
   },
@@ -108,7 +115,7 @@ const sections: LegalSection[] = [
     title: "Transferts hors de l’Union européenne",
     content: (
       <p>
-        Certains prestataires, comme l’hébergeur {org.host.name}, sont établis aux États-Unis. Ces transferts sont
+        Certains prestataires ({org.host.name}, Resend) sont établis aux États-Unis. Ces transferts sont
         encadrés par les garanties prévues par le RGPD : décision d’adéquation de la Commission européenne (EU-US Data
         Privacy Framework) ou clauses contractuelles types.
       </p>
