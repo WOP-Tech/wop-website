@@ -1,8 +1,17 @@
-export default function Home() {
+import { HomeAbout } from "@/features/home/HomeAbout";
+import { HomeHero } from "@/features/home/HomeHero";
+import { HomeKpis } from "@/features/home/HomeKpis";
+import { HomePillars } from "@/features/home/HomePillars";
+import { HomeWords } from "@/features/home/HomeWords";
+
+export default function HomePage() {
   return (
-    <main>
-      <h1>Women of Power</h1>
-      <p>Site WOP en construction.</p>
-    </main>
+    <>
+      <HomeHero />
+      <HomeKpis />
+      <HomeAbout />
+      <HomePillars />
+      <HomeWords />
+    </>
   );
 }
