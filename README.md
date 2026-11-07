@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Site vitrine Woman of Power (WOP)
 
-## Getting Started
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Supabase · Resend · hébergement Vercel.
 
-First, run the development server:
+## Démarrer
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # puis remplir les valeurs (voir ci-dessous)
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sans `.env.local`, le site fonctionne entièrement ; seuls les formulaires (contact, newsletter) affichent « pas encore activé ».
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configurer les formulaires
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Supabase (base de données)
 
-## Learn More
+1. Créer un projet sur [supabase.com](https://supabase.com) **en choisissant une région de l’Union européenne** (Paris ou Francfort) : la politique de confidentialité l’annonce.
+2. *SQL Editor* → coller [`supabase/migrations/20261107000000_formulaires.sql`](supabase/migrations/20261107000000_formulaires.sql) → *Run*.
+3. *Project Settings → API* : copier l’URL dans `SUPABASE_URL` et la clé **service_role** dans `SUPABASE_SERVICE_ROLE_KEY`.
 
-To learn more about Next.js, take a look at the following resources:
+> ⚠️ La clé `service_role` donne tous les droits sur la base : uniquement dans `.env.local` et dans Vercel, jamais dans le code, jamais préfixée par `NEXT_PUBLIC_`. Les tables ont la RLS activée sans policy : la clé publique n’y a aucun accès.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Les messages et les inscriptions se consultent dans *Table Editor* (`contact_messages`, `newsletter_subscribers`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Resend (e-mails)
 
-## Deploy on Vercel
+1. Créer un compte sur [resend.com](https://resend.com), puis *Domains* → ajouter le domaine du site et créer les enregistrements DNS indiqués (SPF, DKIM).
+2. *API Keys* → créer une clé « Sending access » → `RESEND_API_KEY`.
+3. `EMAIL_FROM` : une adresse sur ce domaine vérifié, ex. `Woman of Power <contact@womanofpower.org>`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Sans domaine vérifié, Resend n’envoie qu’à l’adresse du compte : pratique pour tester, pas pour la production.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Vercel
+
+Reporter les variables de `.env.example` dans *Project → Settings → Environment Variables*, puis redéployer.
+
+## Fonctionnement
+
+- **Contact** : chaque message est enregistré dans Supabase et notifié à `CONTACT_INBOX` ; « Répondre » écrit directement au visiteur.
+- **Newsletter** : double opt-in (recommandation CNIL). L’inscription est « en attente » jusqu’au clic sur le bouton de la page `/newsletter/confirmation`. Chaque newsletter envoyée doit contenir le lien `/newsletter/desinscription?token=<unsubscribe_token>` de l’abonné·e.
+- Envoi des newsletters elles-mêmes : non inclus (à faire depuis Resend *Broadcasts* ou un outil dédié, à partir des abonné·es `confirmed`).
+
+## Organisation du code
+
+```
+src/
+├── app/            routes (une page = un dossier) ; la page orchestre, elle n’implémente pas
+├── components/     composants génériques (layout, ui, legal)
+├── features/       logique métier WOP : une fonctionnalité = ses composants, données et actions
+├── data/site.ts    informations centrales : navigation, réseaux, liens à venir, mentions légales
+├── lib/            utilitaires ; lib/server/ = code serveur uniquement (Supabase, Resend)
+└── assets/         images (voir assets/images/LISEZ-MOI.md) et polices
+```
+
+Charte graphique : tokens dans [`src/app/globals.css`](src/app/globals.css) — aucune couleur en dur dans les composants.
+
+## Workflow Git
+
+`main` (stable) ← `dev` (intégration) ← `feat/…`, `fix/…`. Commits : `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`. Une pull request relue par l’autre avant fusion dans `dev`.
