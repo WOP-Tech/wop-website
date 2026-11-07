@@ -33,6 +33,10 @@ export function NewsletterForm() {
           {pending ? "Envoi…" : "S’inscrire"}
         </Button>
       </div>
+      {/* Champ piège anti-robots : invisible et ignoré par les lecteurs d'écran. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] size-px overflow-hidden">
+        <input name="company" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
       <p id="newsletter-status" role="status" aria-live="polite" className="mt-2.5 ml-4 text-[0.9rem] empty:hidden">
         {state.message}
       </p>
