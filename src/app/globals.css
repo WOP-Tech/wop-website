@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Charte graphique WOP (uploads/Charte graphique- WOP .pages) appliquée selon les maquettes (uploads/site-wop-pages).
+ * Palette : crème (fond), brun (typographie, ancrage), rose corail (signature), corail lumineux, doré (petite touche),
+ * blanc autorisé (`white` de Tailwind). Pas de valeur hexadécimale dans les composants : passer par ces tokens.
+ */
+@theme {
+  --color-brown: #69412c;
+  --color-coral: #e76b70;
+  --color-cream: #fff6ea;
+  --color-salmon: #f47a63;
+  --color-sun: #f6b54a;
+  /* Corail légèrement assombri pour les mots mis en valeur sur fond crème (contraste) */
+  --color-coral-ink: color-mix(in srgb, #e76b70 90%, #69412c);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --breakpoint-tab: 53.75rem; /* 860px : bascule une colonne des maquettes */
+  --breakpoint-nav: 62.5rem; /* 1000px : apparition de la navigation complète */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-menu: cubic-bezier(0.7, 0, 0.2, 1);
+
+  /* Entrée des textes du haut de page (maquettes : keyframes `rise`) */
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.55em);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-display: var(--font-league-spartan), "Arial Narrow", system-ui, sans-serif;
+  --font-script: var(--font-tangerine), "Brush Script MT", cursive;
+  --font-sans: var(--font-open-sauce), system-ui, sans-serif;
+}
+
+/* Dégradé officiel (charte) : rose corail 70 %, corail lumineux 20 %, doré 10 % en petite touche. */
+@utility bg-wop-gradient {
+  background-image: linear-gradient(135deg, var(--color-coral) 0%, var(--color-coral) 45%, var(--color-salmon) 80%, var(--color-sun) 100%);
+}
+
+/*
+ * `anim:` = état initial d'une animation (élément masqué avant son apparition).
+ * Ne s'applique que si le JavaScript est actif et que le visiteur n'a pas demandé de réduire les animations :
+ * sans JS, le contenu reste visible. `scripting` est évalué avant le premier affichage, donc aucun clignotement.
+ */
+@custom-variant anim {
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    @slot;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-cream);
+    overflow-x: clip;
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-brown);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 3px;
+  }
+}
+
+@utility eyebrow {
+  margin: 0 0 22px;
+  font: 600 max(0.82rem, 13px) / 1 var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Titre de section (maquettes : `.d-h2`) */
+@utility heading-section {
+  margin: 0;
+  font: 600 clamp(1.48rem, 2.81vw, 2.65rem) / 1.04 var(--font-display);
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+/* Gouttière latérale qui respecte les encoches (iPhone en paysage) */
+@utility px-safe {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }

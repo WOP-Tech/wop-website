@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ressources de travail (maquettes, charte) : partagées hors du dépôt
+/uploads/
+
+# documents personnels Apple Pages/Numbers/Keynote
+*.pages
+*.numbers
+*.key
