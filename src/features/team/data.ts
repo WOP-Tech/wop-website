@@ -25,7 +25,7 @@ export const founders: Member[] = [
 
 export const volunteers: Member[] = [
   { name: "Tanya", role: "V-WOP", photo: tanya, photoAlt: "Portrait provisoire de Tanya", linkedin: null },
-  { name: "Lorrine", role: "V-WOP", photo: lorrine, photoAlt: "Portrait provisoire de Lorrine", linkedin: null },
+  { name: "Lorrine", role: "V-WOP", photo: lorrine, photoAlt: "Portrait provisoire de Lorrine", linkedin: "https://www.linkedin.com/in/lorrine-cleophanelle-anderi" },
 ];
 
 export const experts: Member[] = [
@@ -41,7 +41,7 @@ export const experts: Member[] = [
     role: "Expert·e · Career Workshop",
     photo: nolivet,
     photoAlt: "Portrait provisoire de Nolivet",
-    linkedin: null,
+    linkedin: "https://www.linkedin.com/in/nolivet-olonade",
   },
 ];
 
