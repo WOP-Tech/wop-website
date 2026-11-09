@@ -18,9 +18,9 @@ export type Member = {
 
 // TODO(équipe WOP) : noms de famille, rôles, liens LinkedIn et vraies photos des V-WOP et des expert·es.
 export const founders: Member[] = [
-  { name: "Néty Behoundja", role: "Présidente fondatrice", photo: nety, photoAlt: "Portrait de Néty", linkedin: null },
-  { name: "Elseline Zonon", role: "Responsable tech", photo: elseline, photoAlt: "Portrait de Elseline", linkedin: null },
-  { name: "Serena Noudedji", role: "Responsable com", photo: serena, photoAlt: "Portrait de Serena", linkedin: null },
+  { name: "Néty Behoundja", role: "Présidente fondatrice", photo: nety, photoAlt: "Portrait de Néty", linkedin: "https://www.linkedin.com/in/nety-behoundja" },
+  { name: "Elseline Zonon", role: "Responsable tech", photo: elseline, photoAlt: "Portrait de Elseline", linkedin: "https://www.linkedin.com/in/elseline-zonon" },
+  { name: "Serena Noudedji", role: "Responsable com", photo: serena, photoAlt: "Portrait de Serena", linkedin: "https://www.linkedin.com/in/serena-noudedji" },
 ];
 
 export const volunteers: Member[] = [
@@ -34,7 +34,7 @@ export const experts: Member[] = [
     role: "Expert·e · Speak to Impact",
     photo: reeceHermine,
     photoAlt: "Portrait provisoire de Reece-Hermine",
-    linkedin: null,
+    linkedin: "https://www.linkedin.com/in/reece-hermine-adanwenon-b27bb4108",
   },
   {
     name: "Nolivet",
