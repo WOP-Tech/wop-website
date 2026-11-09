@@ -18,14 +18,14 @@ export type Member = {
 
 // TODO(équipe WOP) : noms de famille, rôles, liens LinkedIn et vraies photos des V-WOP et des expert·es.
 export const founders: Member[] = [
-  { name: "Néty Behoundja", role: "Présidente fondatrice", photo: nety, photoAlt: "Portrait de Néty", linkedin: null },
-  { name: "Elseline Zonon", role: "Responsable tech", photo: elseline, photoAlt: "Portrait de Elseline", linkedin: null },
-  { name: "Serena Noudedji", role: "Responsable com", photo: serena, photoAlt: "Portrait de Serena", linkedin: null },
+  { name: "Néty Behoundja", role: "Présidente fondatrice", photo: nety, photoAlt: "Portrait de Néty", linkedin: "https://www.linkedin.com/in/nety-behoundja" },
+  { name: "Elseline Zonon", role: "Responsable tech", photo: elseline, photoAlt: "Portrait de Elseline", linkedin: "https://www.linkedin.com/in/elseline-zonon" },
+  { name: "Serena Noudedji", role: "Responsable com", photo: serena, photoAlt: "Portrait de Serena", linkedin: "https://www.linkedin.com/in/serena-noudedji" },
 ];
 
 export const volunteers: Member[] = [
   { name: "Tanya", role: "V-WOP", photo: tanya, photoAlt: "Portrait provisoire de Tanya", linkedin: null },
-  { name: "Lorrine", role: "V-WOP", photo: lorrine, photoAlt: "Portrait provisoire de Lorrine", linkedin: null },
+  { name: "Lorrine", role: "V-WOP", photo: lorrine, photoAlt: "Portrait provisoire de Lorrine", linkedin: "https://www.linkedin.com/in/lorrine-cleophanelle-anderi" },
 ];
 
 export const experts: Member[] = [
@@ -34,19 +34,20 @@ export const experts: Member[] = [
     role: "Expert·e · Speak to Impact",
     photo: reeceHermine,
     photoAlt: "Portrait provisoire de Reece-Hermine",
-    linkedin: null,
+    linkedin: "https://www.linkedin.com/in/reece-hermine-adanwenon-b27bb4108",
   },
   {
     name: "Nolivet",
     role: "Expert·e · Career Workshop",
     photo: nolivet,
     photoAlt: "Portrait provisoire de Nolivet",
-    linkedin: null,
+    linkedin: "https://www.linkedin.com/in/nolivet-olonade",
   },
 ];
 
 /**
- * Mention de travail des maquettes (mot provisoire, photos de banque d'images…).
- * À passer à `false` quand le vrai mot de Néty et les vraies photos sont en ligne.
+ * Mention de travail des maquettes, masquée sur le site (`false`). Reste à compléter malgré tout :
+ * mot définitif de Néty, vraies photos des V-WOP et des expert·es, noms de famille, liens LinkedIn manquants.
+ * Repasser à `true` pour réafficher la mention sous l'équipe.
  */
-export const hasPlaceholderContent = true;
+export const hasPlaceholderContent = false;

@@ -59,5 +59,9 @@ export const faqs: Faq[] = [
   },
 ];
 
-/** Mentions de travail des maquettes (modalités de don, bilans, FAQ à valider) : à passer à `false` une fois complété. */
-export const showWorkNotes = true;
+/**
+ * Mentions de travail des maquettes, masquées sur le site (`false`). Reste à compléter malgré tout :
+ * plateforme de don (`donationUrl`), bilans PDF (`reports`), validation des questions de la FAQ.
+ * Repasser à `true` pour réafficher les mentions.
+ */
+export const showWorkNotes = false;
