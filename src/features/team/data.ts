@@ -46,7 +46,8 @@ export const experts: Member[] = [
 ];
 
 /**
- * Mention de travail des maquettes (mot provisoire, photos de banque d'images…).
- * À passer à `false` quand le vrai mot de Néty et les vraies photos sont en ligne.
+ * Mention de travail des maquettes, masquée sur le site (`false`). Reste à compléter malgré tout :
+ * mot définitif de Néty, vraies photos des V-WOP et des expert·es, noms de famille, liens LinkedIn manquants.
+ * Repasser à `true` pour réafficher la mention sous l'équipe.
  */
-export const hasPlaceholderContent = true;
+export const hasPlaceholderContent = false;
