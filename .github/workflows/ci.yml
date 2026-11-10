@@ -1,0 +1,88 @@
+
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+  workflow_dispatch:
+
+# Moindre privilège : la CI lit le code, elle ne peut rien modifier sur le dépôt.
+permissions:
+  contents: read
+
+# Un nouveau push sur une même PR (ou branche) annule le run précédent, devenu inutile.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v5
+
+      - name: Installer Node.js (version de .nvmrc) avec cache npm
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Installer les dépendances (exactement celles du lockfile)
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
+  security:
+    name: security
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v5
+
+      - name: Installer Node.js (version de .nvmrc)
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      # Seules les dépendances livrées en production comptent, à partir du niveau « high ».
+      - name: Dépendances de production vulnérables
+        run: npm audit --omit=dev --audit-level=high
+
+      # Toute variable NEXT_PUBLIC_* est copiée dans le JavaScript envoyé au navigateur.
+      - name: Aucune clé sensible exposée au navigateur
+        run: |
+          if grep -rnE "NEXT_PUBLIC_[A-Z0-9_]*(SERVICE_ROLE|SECRET|PRIVATE|API_KEY)" src .env.example; then
+            echo "::error::Une variable sensible est préfixée NEXT_PUBLIC_ : elle serait envoyée au navigateur."
+            exit 1
+          fi
+
+      # Valeurs passées par env: (et non ${{ }} dans le script) pour empêcher l'injection de commandes via un titre de PR.
+      - name: Nom de branche et titre de PR
+        if: github.event_name == 'pull_request'
+        env:
+          BRANCH: ${{ github.head_ref }}
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ ! "$BRANCH" =~ ^(feat|fix|chore|docs|refactor|test|hotfix)/[a-z0-9._-]+$ && "$BRANCH" != "dev" ]]; then
+            echo "::error::Branche « $BRANCH » : utiliser feat/…, fix/…, chore/…, docs/…, refactor/…, test/… ou hotfix/…"
+            exit 1
+          fi
+          if [[ ! "$TITLE" =~ ^(feat|fix|chore|refactor|docs|test|release)(\(.+\))?:\ .+ ]]; then
+            echo "::error::Titre « $TITLE » : commencer par feat:, fix:, chore:, refactor:, docs:, test: ou release:"
+            exit 1
+          fi
